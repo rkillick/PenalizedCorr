@@ -157,8 +157,9 @@ acf <-
     else if(estimate=="bandtap" ){
       acf=stats::acf(x,lag.max=lag.max,type=type,plot=FALSE,na.action=na.action,demean=demean)
       xacf=apply(matrix(1:nser,ncol=1),MARGIN=1,FUN=function(i){
-      bandtap = bandtap(xacf,n,...)
-      return(bandtap)
+        xacf = acf$acf[,i,i]
+        bandtap = bandtap(xacf,n,...)
+        return(bandtap)
       
       if(nser==1){xacf=matrix(xacf,ncol=1)}
       else if(lag.max==1){xacf=matrix(xacf,nrow=1)}
