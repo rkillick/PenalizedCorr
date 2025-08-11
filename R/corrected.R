@@ -252,6 +252,8 @@ corrected = function(x, lag.max = NULL, type = c("correlation", "covariance",
     }
   }
   acf$lh=lh
+  acf$lambda=lambda
+  acf$target=target
   return(acf)
 }
 
