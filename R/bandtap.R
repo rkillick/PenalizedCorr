@@ -13,14 +13,16 @@
 
 bandtap <- function (acf, n, ...){
   
-  n <- length(x)
   lh <- 2*sqrt(log10(n)/n)
   #compares the absolute value of each acf with the threshold.
   thresh = abs(acf) < lh
   rle = rle(thresh)
   #finds position in the run-length encoding where a value repeats 5 times
-  rle5 = which(rle==5)
-  r <- which(rle[rle5] == TRUE)
-  w <- c(rep(1,r), (2-((r+1):2*r)/r), rep(0, n-2*r))
+  rle5 <- which(rle$lengths == 5)
+  if(length(rle5) == 0){
+    return(acf)
+  }
+  r <- which(rle$values[rle5] == TRUE)
+  w <- c(rep(1,r), (2-((r+1):(2*r)/r)), rep(0, length(acf)-(2*r)))
   return (acf*w)
 }
