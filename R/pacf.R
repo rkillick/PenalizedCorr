@@ -99,6 +99,7 @@ pacf <-
   else{ # penalised output
     pacf=corrected(x,lag.max,type="partial",na.action,demean,lh,lambda,target,...)
     pacf$penalized=TRUE
+    myylab = "Penalized PACF"
   }
   
   if(plot){
@@ -107,7 +108,7 @@ pacf <-
       plot(pacf,...)
     }
     else if(pacf$penalized==TRUE){
-      plot(pacf,ylab="Penalized PACF",...)
+      plot(pacf,myylab,...)
     }
     else{
       plot(pacf,...)

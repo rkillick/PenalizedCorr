@@ -145,6 +145,7 @@ acf <-
       else{ #run penalised estimation
         acf=corrected(x,lag.max,type,na.action,demean,lh,lambda,target,...)
         acf$penalized=TRUE
+        myylab = "Penalized ACF"
       }
       acf$estimate="direct"
     }
@@ -153,6 +154,7 @@ acf <-
                      demean=demean,penalized=penalized,lh=lh,...)
       acf$penalized=penalized
       acf$estimate="invertpacf"
+      myylab = "Invertpacf Penalized ACF"
     }
     else if(estimate=="bandtap" ){
       acf=stats::acf(x,lag.max=lag.max,type=type,plot=FALSE,na.action=na.action,demean=demean)
@@ -169,6 +171,7 @@ acf <-
       }
       acf$penalized=FALSE
       acf$estimate="bandtap"
+      myylab = "Banded & Tapered ACF"
     }
     else{stop("The estimate argument can only take values 'direct', 'invertpacf' or 'bandtap'.")}
     
@@ -178,7 +181,7 @@ acf <-
         plot(acf,...)
       }
       else if(acf$penalized==TRUE){
-        plot(acf,ylab="Penalized ACF",...)
+        plot(acf,myylab,...)
       }
       else{
         plot(acf,...)
