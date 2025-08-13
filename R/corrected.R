@@ -176,23 +176,6 @@ corrected = function(x, lag.max = NULL, type = c("correlation", "covariance",
   }
   if(lag.max==1){target=matrix(target,nrow=1)}
   else if(nser==1){target=matrix(target,ncol=1)}
-    
-#  target=apply(nserIndexM,MARGIN=1,FUN=function(i){
-#    ind=(abs(tmpacf[,i,i])>lh[,i])
-#    target=b[,i]*ind
-#    return(target)
-#  })  lag.max x nser
-#  if(lag.max==1){target=matrix(target,nrow=1)}
-#  else if(nser==1){target=matrix(target,ncol=1)}
-  
-#  lambda=apply(nserIndexM,MARGIN=1,FUN=function(i){
-#    ind=(abs(tmpacf[,i,i])>lh[,i])
-#    lambda=(!ind)*h*10*log10(sampleT) *lh[,i]*(lh[,i]-abs(tmpacf[,i,i]))/abs(tmpacf[,i,i])^{3}+ # shrink more aggressively for larger lags
-#      (ind)*(abs(tmpacf[,i,i])-lh[,i])*(1-lh[,i])/(1-abs(tmpacf[,i,i]))^2*10*log10(sampleT) # movement towards target doesn't depend on lag
-#    return(lambda)
-#  })  lag.max x nser
-#  if(lag.max==1){lambda=matrix(lambda,nrow=1)}
-#  else if(nser==1){lambda=matrix(lambda,ncol=1)}
   
   weights=lambda/(1+lambda) # doesn't drop dimensions
 
