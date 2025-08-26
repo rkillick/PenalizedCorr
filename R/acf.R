@@ -181,7 +181,7 @@ acf <-
         plot(acf,...)
       }
       else if(acf$penalized==TRUE){
-        plot(acf,myylab,...)
+        plot(acf,ylab=myylab,...)
       }
       else{
         plot(acf,...)
