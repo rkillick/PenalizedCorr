@@ -111,7 +111,7 @@ corrected = function(x, lag.max = NULL, type = c("correlation", "covariance",
       if(arord[i]<(sampleT)^{1/3}){
         # if approximated well by a "low" order AR process
         # using n^{1/3} (had log(n) and log(n)*2 previously), trying to get a balance for larger n as log(n) is too small
-        return(acf(x[,i],plot=FALSE,lag.max=lag.max,estimate="invertpacf")$acf[-1,i,i])
+        return(acf(x[,i],plot=FALSE,lag.max=lag.max,estimate="invertpacf")$acf[-1,,])
       }
       b=tmpacf[,i,i]+(h*tmpacf[,i,i]+(1-tmpacf[,i,i])*(1+2*sum((1-j/sampleT)*tmpacf[j,i,i])))/sampleT
       b = sign(b) * pmin(abs(b), 0.99)
