@@ -3,7 +3,7 @@
 #'
 #' @description Calculated the corrected (partial) autocorrelation function
 #' @param acf incoming acf value
-#' @param n incoming length of x from acf funtion
+#' @param sampleT incoming length of x from acf funtion
 #' @param ... additional arguments passed to plotting.
 #' 
 #' @references Gallagher, C., Killick, R., Tan, X. (2024+) Penalized M-estimation 

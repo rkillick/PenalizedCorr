@@ -4,14 +4,14 @@
 \alias{bandtap}
 \title{bandtap}
 \usage{
-bandtap(acf, n, ...)
+bandtap(acf, sampleT, ...)
 }
 \arguments{
 \item{acf}{incoming acf value}
 
-\item{n}{incoming length of x from acf funtion}
-
 \item{...}{additional arguments passed to plotting.}
+
+\item{n}{incoming length of x from acf funtion}
 }
 \description{
 Calculated the corrected (partial) autocorrelation function
