@@ -9,9 +9,9 @@ bandtap(acf, sampleT, ...)
 \arguments{
 \item{acf}{incoming acf value}
 
-\item{...}{additional arguments passed to plotting.}
+\item{sampleT}{incoming length of x from acf funtion}
 
-\item{n}{incoming length of x from acf funtion}
+\item{...}{additional arguments passed to plotting.}
 }
 \description{
 Calculated the corrected (partial) autocorrelation function
