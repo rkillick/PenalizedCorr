@@ -160,7 +160,7 @@ acf <-
       acf=stats::acf(x,lag.max=lag.max,type=type,plot=FALSE,na.action=na.action,demean=demean)
       xacf=apply(matrix(1:nser,ncol=1),MARGIN=1,FUN=function(i){
         xacf = acf$acf[-1,i,i]
-        bandtap = bandtap(xacf,n,...)
+        bandtap = bandtap(xacf,sampleT,...)
         return(bandtap)
       })
       if(nser==1){xacf=matrix(xacf,ncol=1)}
