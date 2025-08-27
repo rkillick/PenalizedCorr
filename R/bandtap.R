@@ -11,9 +11,9 @@
 #' McMurray & Politis (2010) forecast package for CI
 #####
 
-bandtap <- function (acf, n, ...){
+bandtap <- function (acf, sampleT, ...){
   
-  lh <- 2*sqrt(log10(n)/n)
+  lh <- 2*sqrt(log10(sampleT)/sampleT)
   #compares the absolute value of each acf with the threshold.
   thresh = abs(acf) < lh
   rle = rle(thresh)
