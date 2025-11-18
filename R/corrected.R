@@ -152,8 +152,7 @@ corrected = function(x, lag.max = NULL, type = c("correlation", "covariance",
   
   
   if(!(is.numeric(target) || is.null(target))){stop("target must be numeric")}
-  if(any(!target <= 1)){stop("target must be between 1 and -1")}
-  else if(any(!target >= (-1))){stop("target must be between 1 and -1")}
+  if(any(abs(target) > 1)){stop("target must be between 1 and -1")}
   if(length(target)==1){target=matrix(rep(target,lag.max*nser),nrow=lag.max)} # same value for all series and lags
   else if(length(target)==lag.max){ # same target vector for all series
     target = matrix(target, nrow = lag.max,ncol=nser)
