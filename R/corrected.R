@@ -8,8 +8,8 @@
 #' @param na.action function to be called to handle missing values. Default is na.fail, na.pass can be used.
 #' @param demean  'logical'. If 'TRUE' (the default), mean(x) is removed prior to estimation.
 #' @param lh vector of length 1 (value used for all lags), or length lag.max. Default uses formula in the description.
-#' @param lambda controls the degree of shrinkage towards the target.
-#' @param target the unbiased (partial) autocorrelation function from a (model) assumption.
+#' @param lambda controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
+#' @param target the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
 #' @param ... additional arguments passed to plotting.
 #'
 #' @return An object of type acf with the following elements:
