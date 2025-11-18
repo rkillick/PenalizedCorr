@@ -29,9 +29,9 @@ corrected(
 
 \item{lh}{vector of length 1 (value used for all lags), or length lag.max. Default uses formula in the description.}
 
-\item{lambda}{controls the degree of shrinkage towards the target.}
+\item{lambda}{controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
-\item{target}{the unbiased (partial) autocorrelation function from a (model) assumption.}
+\item{target}{the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
 \item{...}{additional arguments passed to plotting.}
 }

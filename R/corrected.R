@@ -189,31 +189,7 @@ corrected = function(x, lag.max = NULL, type = c("correlation", "covariance",
   
   # check if NND
   if(type!="partial"){
-    acfstar=apply(matrix(1:nser,ncol=1),MARGIN=1,FUN=function(i){
-        gamma=c(1,acfstar[,i])
-        Gamma=toeplitz(gamma)
-        ei=eigen(Gamma)
-        if(any(ei$values<=0)){ # NND
-          if(arord[i]<sampleT^{1/3}){ # modeled by a "low" order AR, move towards that
-            # using n^{1/3} (had log(n) and log(n)*2 previously), trying to get a balance for larger n as log(n) is too small
-            rr=b[1:lag.max,i]
-            R=toeplitz(c(1,rr))
-            alpha=min(eigen(R)$values)
-            beta=abs(min(ei$values))*(1+1/sampleT)
-            cv=beta/(alpha+beta)
-            acfstar[,i]=cv*rr+(1-cv)*acfstar[,i]
-          }
-          else{ # move towards IID 
-            R=diag(rep(1,(lag.max+1)))
-            alpha=min(eigen(R)$values)
-            beta=abs(min(ei$values))*(1+1/sampleT)
-            cv=beta/(alpha+beta)
-            acfstar[,i]=(1-cv)*acfstar[,i]
-          }
-          Rfinal=toeplitz(c(1,acfstar[,i]))
-        }
-        return(acfstar[,i])
-    }) # lag.max x nser
+    acfstar=nnd(acfstar,nser,lag.max,arord,b) # check if non-negative definite and if not make it so
   }
 
   if(type=="partial"){

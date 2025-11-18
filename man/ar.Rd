@@ -29,7 +29,7 @@ where \eqn{N} is the number of non-missing observations except for \code{method=
 
 \item{series}{names for the series. Defaults to \code{deparse1(substitute(x))}.}
 
-\item{lh}{vector of length 1 (value used for all lags), or length lag.max. Default uses formula in the description.}
+\item{lh}{vector of length 1 (value used for all lags), or length order.max. Default uses formula in the description.}
 
 \item{...}{additional arguments for specific methods.}
 }

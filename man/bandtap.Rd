@@ -2,22 +2,56 @@
 % Please edit documentation in R/bandtap.R
 \name{bandtap}
 \alias{bandtap}
-\title{bandtap}
+\title{Banded and Tapered estimation of the autocorrelation function}
 \usage{
-bandtap(acf, sampleT, ...)
+bandtap(acf, sampleT)
 }
 \arguments{
-\item{acf}{incoming acf value}
+\item{acf}{original biased acf (likely from the stats package).}
 
-\item{sampleT}{incoming length of x from acf funtion}
-
-\item{...}{additional arguments passed to plotting.}
+\item{sampleT}{length of the underlying dataset.}
+}
+\value{
+A vector of the same length as \code{acf}.
 }
 \description{
-Calculated the corrected (partial) autocorrelation function
+It is well known that the default acf sample estimates are biased.
+This function provides the banded and tapered estimation of the acf.  The function
+is designed to be called from the main acf function via the \code{estimate="bandtap"}
+argument.  This function does not calculate confidence intervals for the estimate, users
+who want confidence intervals should use the \code{taperedacf} function from the \code{forecast}
+package.
+}
+\details{
+The banded and tapered method identifies an appropriate cut-off, $r$, beyond which, the acf is 
+likely noise.  Up to this point, the acf is returned as entered, between $r$ and $2r$ the 
+estimate is tapered towards zero, after lag $2r$ the acf is set to exactly zero.  This method
+works well for processes that have a natural cut-off such as the acf of an MA process.
+}
+\examples{
+\dontrun{
+### AR(1)
+set.seed(1234)
+data <- arima.sim(n=100, model=list(ar=0.8))
+dataacf=acf(data,penalized=FALSE)$acf[,,1] # usual stats::acf() estimate
+databandtap=PenalizedCorr:::bandtap(dataacf,length(data))
+ts.plot(dataacf)
+abline(h=0,col='grey')
+lines(1:length(databandtap),databandtap,col='red')
+dataacf==databandtap # first 10 are the same, 20 onwards is exactly zero
+
+set.seed(1234)
+data <- arima.sim(n=100, model=list(ma=0.8))
+dataacf=acf(data,penalized=FALSE)$acf[,,1] # usual stats::acf() estimate
+databandtap=PenalizedCorr:::bandtap(dataacf,length(data))
+ts.plot(dataacf)
+lines(1:length(databandtap),databandtap,col='red')
+dataacf==databandtap 
+# first 2 are the same (lag 0 and lag 1), lag 2 is tapered, then zero from lag 3.
+}
 }
 \references{
-Gallagher, C., Killick, R., Tan, X. (2024+) Penalized M-estimation 
-for Autocorrelation. \emph{Submitted.}
-McMurray & Politis (2010) forecast package for CI
+McMurry, T.L. and Politis, D.N. (2010), Banded and tapered estimates for autocovariance 
+matrices and the linear process bootstrap. \emph{Journal of Time Series Analysis}, 
+31: 471-482.
 }

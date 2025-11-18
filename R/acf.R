@@ -17,7 +17,7 @@
 #' @param demean logical. Should a mean be estimated and subtracted before correlations are calculated?
 #' @param penalized logical. If \code{TRUE} (the default) the penalized ACF/PACF is computed; if \code{FALSE} the sample ACF/PACF is computed using \code{stats:acf}.
 #' @param lh sequence of threshold values across 1:lag.max, default is \code{NULL}. Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
-#' @param estimate character vector of the estimation method for the ACF, options are \code{"direct"} (default) or \code{"invertpacf"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.
+#' @param estimate character vector of the estimation method for the ACF, options are \code{"direct"} (default), \code{"invertpacf"} or \code{"bandtap"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.
 #' @param lambda controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
 #' @param target the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
 #' @param ... additional arguments for specific methods or plotting.
@@ -51,6 +51,11 @@
 #'
 #' @references Gallagher, C., Killick, R., Tan, X. (2024+) Penalized M-estimation 
 #' for Autocorrelation. \emph{Submitted.}
+#' 
+#' For \code{estimate="bandtap"} use:
+#' McMurry, T.L. and Politis, D.N. (2010), Banded and tapered estimates for autocovariance 
+#' matrices and the linear process bootstrap. \emph{Journal of Time Series Analysis}, 
+#' 31: 471-482.
 #' 
 #' @examples
 #' \dontrun{
@@ -165,6 +170,8 @@ acf <-
       })
       if(nser==1){xacf=matrix(xacf,ncol=1)}
       else if(lag.max==1){xacf=matrix(xacf,nrow=1)}
+
+      xacf=nnd(xacf,sampleT,lag.max) # check if non-negative definite and if not make it so
       
       for(i in 1:nser){
         acf$acf[-1,i,i]=xacf[,i]

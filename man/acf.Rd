@@ -34,13 +34,13 @@ acf(
 
 \item{penalized}{logical. If \code{TRUE} (the default) the penalized ACF/PACF is computed; if \code{FALSE} the sample ACF/PACF is computed using \code{stats:acf}.}
 
-\item{lh}{sequence of threshold values across h, default is \code{NULL}. Could be a single value (repeated for all h), a single vector of length lag.max (repeated for all nser), or a h x nser matrix. Default is data driven choice.}
+\item{lh}{sequence of threshold values across 1:lag.max, default is \code{NULL}. Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
-\item{estimate}{character vector of the estimation method for the ACF, options are \code{"direct"} (default) or \code{"invertpacf"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.}
+\item{estimate}{character vector of the estimation method for the ACF, options are \code{"direct"} (default), \code{"invertpacf"} or \code{"bandtap"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.}
 
-\item{lambda}{controls the degree of shrinkage towards the target.}
+\item{lambda}{controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
-\item{target}{the unbiased (partial) autocorrelation function from a (model) assumption.}
+\item{target}{the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
 \item{...}{additional arguments for specific methods or plotting.}
 }
@@ -135,4 +135,9 @@ acf(x, type ="partial", penalized = FALSE) # usual stats::pacf() estimate
 \references{
 Gallagher, C., Killick, R., Tan, X. (2024+) Penalized M-estimation 
 for Autocorrelation. \emph{Submitted.}
+
+For \code{estimate="bandtap"} use:
+McMurry, T.L. and Politis, D.N. (2010), Banded and tapered estimates for autocovariance 
+matrices and the linear process bootstrap. \emph{Journal of Time Series Analysis}, 
+31: 471-482.
 }
