@@ -13,7 +13,7 @@
 #' @param na.action function to be called to handle missing values. \code{na.pass} can be used.
 #' @param demean logical. Should a mean be estimated and subtracted before correlations are calculated?
 #' @param penalized logical. If \code{TRUE} (the default) the penalized ACF/PACF is computed; if \code{FALSE} the sample ACF/PACF is computed using \code{stats:acf}.
-#' @param lh sequence of threshold values across h, default is \code{NULL}. Could be a single value (repeated for all h), a single vector of length lag.max (repeated for all nser), or a h x nser matrix. Default is data driven choice.
+#' @param lh sequence of threshold values across 1:lag.max, default is \code{NULL}. Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
 #' @param lambda controls the degree of shrinkage towards the target.
 #' @param target the unbiased (partial) autocorrelation function from a (model) assumption.
 #' @param ... additional arguments for specific methods or plotting.
