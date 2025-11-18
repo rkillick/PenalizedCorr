@@ -5,7 +5,7 @@ Version 1.1
 * Added functionality to calculate the banded and tapered estimate from McMurry and Politis (2010)
 * Moved the target and lambda values (crucial in estimation) to the argument list with the previous values as defaults. This gives the user more control if wanted.
 * Updated documentation.
-* Added a vignette.
+* Pulled out the NND part from corrected.R into a separate function so it can be used both with bandtap estimates and penalized estimates.
 
 Version 1.0.0.2
 ===============
