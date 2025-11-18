@@ -22,7 +22,7 @@ bandtap <- function (acf, sampleT, ...){
   if(length(rle5) == 0){
     return(acf)
   }
-  r <- which(rle$values[rle5] == TRUE)
+  r <- which(rle$values[rle5] == TRUE)[1]
   w <- c(rep(1,r), (2-((r+1):(2*r)/r)), rep(0, length(acf)-(2*r)))
   return (acf*w)
 }
