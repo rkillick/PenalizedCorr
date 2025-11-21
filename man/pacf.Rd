@@ -12,6 +12,8 @@ pacf(
   demean = TRUE,
   penalized = TRUE,
   lh = NULL,
+  lambda = NULL,
+  target = NULL,
   ...
 )
 }
@@ -28,7 +30,11 @@ pacf(
 
 \item{penalized}{logical. If \code{TRUE} (the default) the penalized ACF/PACF is computed; if \code{FALSE} the sample ACF/PACF is computed using \code{stats:acf}.}
 
-\item{lh}{sequence of threshold values across h, default is \code{NULL}. Could be a single value (repeated for all h), a single vector of length h (repeated for all nser), or a h x nser matrix. Default is data driven choice.}
+\item{lh}{sequence of threshold values across 1:lag.max, default is \code{NULL}. Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
+
+\item{lambda}{controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
+
+\item{target}{the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
 \item{...}{additional arguments for specific methods or plotting.}
 }
@@ -41,6 +47,9 @@ An object of class \code{"acf"} with the following elements:
 \item{\code{lag}}{A \code{lag.max} x \code{nseries} x \code{nseries} array containing the lags at which the acf/pacf is estimated.}
 \item{\code{series}}{The name of the time series, \code{x}.}
 \item{\code{snames}}{The series names for a multivariate time series.}
+\item{\code{lh}}{Matrix \code{lag.max} x \code{nseries} of the lh used in the estimate when \code{penalized==TRUE}.}
+\item{\code{lambda}}{Matrix \code{lag.max} x \code{nseries} of the lambda used in the estimate when \code{penalized==TRUE}.}
+\item{\code{target}}{Matrix \code{lag.max} x \code{nseries} of the target used in the estimate when \code{penalized==TRUE}.}
 \item{\code{penalized}}{Logical returning the \code{penalized} argument.}
 \item{\code{estimate}}{Character vector returning the \code{estimate} argument.}
 }

@@ -13,7 +13,9 @@
 #' @param na.action function to be called to handle missing values. \code{na.pass} can be used.
 #' @param demean logical. Should a mean be estimated and subtracted before correlations are calculated?
 #' @param penalized logical. If \code{TRUE} (the default) the penalized ACF/PACF is computed; if \code{FALSE} the sample ACF/PACF is computed using \code{stats:acf}.
-#' @param lh sequence of threshold values across h, default is \code{NULL}. Could be a single value (repeated for all h), a single vector of length h (repeated for all nser), or a h x nser matrix. Default is data driven choice.
+#' @param lh sequence of threshold values across 1:lag.max, default is \code{NULL}. Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
+#' @param lambda controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
+#' @param target the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
 #' @param ... additional arguments for specific methods or plotting.
 #'
 #' @details
@@ -39,6 +41,9 @@
 #' \item{\code{lag}}{A \code{lag.max} x \code{nseries} x \code{nseries} array containing the lags at which the acf/pacf is estimated.}
 #' \item{\code{series}}{The name of the time series, \code{x}.}
 #' \item{\code{snames}}{The series names for a multivariate time series.}
+#' \item{\code{lh}}{Matrix \code{lag.max} x \code{nseries} of the lh used in the estimate when \code{penalized==TRUE}.}
+#' \item{\code{lambda}}{Matrix \code{lag.max} x \code{nseries} of the lambda used in the estimate when \code{penalized==TRUE}.}
+#' \item{\code{target}}{Matrix \code{lag.max} x \code{nseries} of the target used in the estimate when \code{penalized==TRUE}.}
 #' \item{\code{penalized}}{Logical returning the \code{penalized} argument.}
 #' \item{\code{estimate}}{Character vector returning the \code{estimate} argument.}
 #' }
@@ -87,23 +92,26 @@
 #####
 
 pacf <-
-function (x, lag.max=NULL, plot=TRUE, na.action=na.fail, demean=TRUE,penalized=TRUE,lh=NULL,...){
+  function (x, lag.max=NULL, plot=TRUE, na.action=na.fail, demean=TRUE, penalized=TRUE,lh=NULL,
+          lambda = NULL, target = NULL,...){
   if(!is.logical(penalized)){stop("penalized must be logical")}
   if(!penalized){ # not penalised so use standard pacf
     pacf=stats::pacf(x,lag.max,plot,na.action,...)
     pacf$penalized=FALSE
   }
   else{ # penalised output
-    pacf=corrected(x,lag.max,type="partial",na.action,demean,lh,...)
+    pacf=corrected(x,lag.max,type="partial",na.action,demean,lh,lambda,target,...)
     pacf$penalized=TRUE
+    myylab = "Penalized PACF"
   }
+  
   if(plot){
     extra.args=list(...)
     if(any(names(extra.args)=="ylab")){
       plot(pacf,...)
     }
     else if(pacf$penalized==TRUE){
-      plot(pacf,ylab="Penalized PACF",...)
+      plot(pacf,ylab=myylab,...)
     }
     else{
       plot(pacf,...)

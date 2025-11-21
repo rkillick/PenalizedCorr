@@ -16,8 +16,10 @@
 #' @param na.action function to be called to handle missing values. \code{na.pass} can be used.
 #' @param demean logical. Should a mean be estimated and subtracted before correlations are calculated?
 #' @param penalized logical. If \code{TRUE} (the default) the penalized ACF/PACF is computed; if \code{FALSE} the sample ACF/PACF is computed using \code{stats:acf}.
-#' @param lh sequence of threshold values across h, default is \code{NULL}. Could be a single value (repeated for all h), a single vector of length h (repeated for all nser), or a h x nser matrix. Default is data driven choice.
-#' @param estimate character vector of the estimation method for the ACF, options are \code{"direct"} (default) or \code{"invertpacf"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.
+#' @param lh sequence of threshold values across 1:lag.max, default is \code{NULL}. Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
+#' @param estimate character vector of the estimation method for the ACF, options are \code{"direct"} (default), \code{"invertpacf"} or \code{"bandtap"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.
+#' @param lambda controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
+#' @param target the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.
 #' @param ... additional arguments for specific methods or plotting.
 #'
 #' @details
@@ -43,12 +45,20 @@
 #' \item{\code{lag}}{A \code{lag.max} x \code{nseries} x \code{nseries} array containing the lags at which the acf/pacf is estimated.}
 #' \item{\code{series}}{The name of the time series, \code{x}.}
 #' \item{\code{snames}}{The series names for a multivariate time series.}
+#' \item{\code{lh}}{Matrix \code{lag.max} x \code{nseries} of the lh used in the estimate when \code{penalized==TRUE}.}
+#' \item{\code{lambda}}{Matrix \code{lag.max} x \code{nseries} of the lambda used in the estimate when \code{penalized==TRUE}.}
+#' \item{\code{target}}{Matrix \code{lag.max} x \code{nseries} of the target used in the estimate when \code{penalized==TRUE}.}
 #' \item{\code{penalized}}{Logical returning the \code{penalized} argument.}
 #' \item{\code{estimate}}{Character vector returning the \code{estimate} argument.}
 #' }
 #'
 #' @references Gallagher, C., Killick, R., Tan, X. (2024+) Penalized M-estimation 
 #' for Autocorrelation. \emph{Submitted.}
+#' 
+#' For \code{estimate="bandtap"} use:
+#' McMurry, T.L. and Politis, D.N. (2010), Banded and tapered estimates for autocovariance 
+#' matrices and the linear process bootstrap. \emph{Journal of Time Series Analysis}, 
+#' 31: 471-482.
 #' 
 #' @examples
 #' \dontrun{
@@ -62,6 +72,7 @@
 #' acf(x,estimate="invertpacf") # estimate the acf by inverting the pacf
 #' acf(data, type ="partial") # penalized partial correlation estimate
 #' acf(data, type ="partial", penalized = FALSE) # usual stats::pacf() estimate
+#'
 #'
 #' set.seed(1234)
 #' x1 <- arima.sim(n=100, model=list(ar=0.5))
@@ -106,23 +117,24 @@
 #####
 
 acf <-
-function (x, lag.max = NULL, type = c("correlation", "covariance", 
-    "partial"), plot = TRUE, na.action = na.fail, demean = TRUE, 
-    penalized=TRUE,lh=NULL,estimate="direct",...){
-
+  function (x, lag.max = NULL, type = c("correlation", "covariance", "partial"), 
+            plot = TRUE, na.action = na.fail, demean = TRUE, penalized=TRUE,
+            lh=NULL, estimate="direct", lambda = NULL, target = NULL,...){
+     
     type <- match.arg(type)
     x <- na.action(as.ts(x))
     x <- as.matrix(x)
     if (!is.numeric(x)){stop("'x' must be numeric")}
     if(!is.logical(penalized)){stop("penalized must be logical")}
+    
     sampleT <- as.integer(nrow(x))
     nser <- as.integer(ncol(x))
     
     if (type == "partial") {
-        m <- match.call()
-        m[[1L]] <- quote(pacf)
-        m$type <- NULL
-        return(eval(m, parent.frame()))
+      m <- match.call()
+      m[[1L]] <- quote(pacf)
+      m$type <- NULL
+      return(eval(m, parent.frame()))
     }
     else if(type=="covariance"){
       acf=acf(x,lag.max=lag.max,type="correlation",plot=plot,na.action=na.action,
@@ -139,8 +151,9 @@ function (x, lag.max = NULL, type = c("correlation", "covariance",
         acf$lh=NULL
       }
       else{ #run penalised estimation
-        acf=corrected(x,lag.max,type,na.action,demean,lh,...)
+        acf=corrected(x,lag.max,type,na.action,demean,lh,lambda,target,...)
         acf$penalized=TRUE
+        myylab = "Penalized ACF"
       }
       acf$estimate="direct"
     }
@@ -149,16 +162,36 @@ function (x, lag.max = NULL, type = c("correlation", "covariance",
                      demean=demean,penalized=penalized,lh=lh,...)
       acf$penalized=penalized
       acf$estimate="invertpacf"
-     }
-    else{stop("The estimate argument can only take values 'direct' or 'invertpacf'.")}
+      myylab = "Invertpacf Penalized ACF"
+    }
+    else if(estimate=="bandtap" ){
+      acf=stats::acf(x,lag.max=lag.max,type=type,plot=FALSE,na.action=na.action,demean=demean)
+      xacf=apply(matrix(1:nser,ncol=1),MARGIN=1,FUN=function(i){
+        xacf = acf$acf[-1,i,i]
+        bandtap = bandtap(xacf,sampleT,...)
+        return(bandtap)
+      })
+      if(nser==1){xacf=matrix(xacf,ncol=1)}
+      else if(lag.max==1){xacf=matrix(xacf,nrow=1)}
 
+      xacf=nnd(xacf,sampleT,lag.max) # check if non-negative definite and if not make it so
+      
+      for(i in 1:nser){
+        acf$acf[-1,i,i]=xacf[,i]
+      }
+      acf$penalized=FALSE
+      acf$estimate="bandtap"
+      myylab = "Banded & Tapered ACF"
+    }
+    else{stop("The estimate argument can only take values 'direct', 'invertpacf' or 'bandtap'.")}
+    
     if(plot){
       extra.args=list(...)
       if(any(names(extra.args)=="ylab")){
         plot(acf,...)
       }
       else if(acf$penalized==TRUE){
-        plot(acf,ylab="Penalized ACF",...)
+        plot(acf,ylab=myylab,...)
       }
       else{
         plot(acf,...)
@@ -166,4 +199,5 @@ function (x, lag.max = NULL, type = c("correlation", "covariance",
       invisible(acf)
     }
     else{return(acf)}
-}
+  }
+

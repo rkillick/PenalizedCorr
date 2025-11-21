@@ -6,7 +6,7 @@
 \alias{PenalizedCorr-package}
 \title{PenalizedCorr: Penalized Estimation of Acf and Pacf for Time Series}
 \description{
-The standard acf and pacf functions return biased estimates of the autocorrelation and partial autocorrelation functions. This packages masks these functions (and the ar function) from the stats package to allow users to encorporate the unbiased estimates of these quantities in their analyses without changing their original code. Backwards compatibility is maintained via "penalized=FALSE" arguments.
+The standard acf and pacf functions return biased estimates of the autocorrelation and partial autocorrelation functions. This packages masks these functions (and the ar function) from the stats package to allow users to encorporate the unbiased estimates of these quantities in their analyses without changing their original code. Backwards compatibility is maintained via "penalized=FALSE" arguments. For ease of comparison, we also include the banded and tapered estimator and an argument option in the acf and pacf functions.
 }
 \seealso{
 Useful links:
@@ -23,6 +23,7 @@ Authors:
 \itemize{
   \item Colin Gallagher
   \item Xiyan Tan
+  \item Andrea Storey
 }
 
 }

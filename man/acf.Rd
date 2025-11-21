@@ -14,6 +14,8 @@ acf(
   penalized = TRUE,
   lh = NULL,
   estimate = "direct",
+  lambda = NULL,
+  target = NULL,
   ...
 )
 }
@@ -32,9 +34,13 @@ acf(
 
 \item{penalized}{logical. If \code{TRUE} (the default) the penalized ACF/PACF is computed; if \code{FALSE} the sample ACF/PACF is computed using \code{stats:acf}.}
 
-\item{lh}{sequence of threshold values across h, default is \code{NULL}. Could be a single value (repeated for all h), a single vector of length h (repeated for all nser), or a h x nser matrix. Default is data driven choice.}
+\item{lh}{sequence of threshold values across 1:lag.max, default is \code{NULL}. Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
-\item{estimate}{character vector of the estimation method for the ACF, options are \code{"direct"} (default) or \code{"invertpacf"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.}
+\item{estimate}{character vector of the estimation method for the ACF, options are \code{"direct"} (default), \code{"invertpacf"} or \code{"bandtap"}.  \code{"invertpacf"} is preferred when the data can be approximated by a low order AR model.}
+
+\item{lambda}{controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
+
+\item{target}{the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
 
 \item{...}{additional arguments for specific methods or plotting.}
 }
@@ -47,6 +53,9 @@ An object of class \code{"acf"} with the following elements:
 \item{\code{lag}}{A \code{lag.max} x \code{nseries} x \code{nseries} array containing the lags at which the acf/pacf is estimated.}
 \item{\code{series}}{The name of the time series, \code{x}.}
 \item{\code{snames}}{The series names for a multivariate time series.}
+\item{\code{lh}}{Matrix \code{lag.max} x \code{nseries} of the lh used in the estimate when \code{penalized==TRUE}.}
+\item{\code{lambda}}{Matrix \code{lag.max} x \code{nseries} of the lambda used in the estimate when \code{penalized==TRUE}.}
+\item{\code{target}}{Matrix \code{lag.max} x \code{nseries} of the target used in the estimate when \code{penalized==TRUE}.}
 \item{\code{penalized}}{Logical returning the \code{penalized} argument.}
 \item{\code{estimate}}{Character vector returning the \code{estimate} argument.}
 }
@@ -88,6 +97,7 @@ acf(x,estimate="invertpacf") # estimate the acf by inverting the pacf
 acf(data, type ="partial") # penalized partial correlation estimate
 acf(data, type ="partial", penalized = FALSE) # usual stats::pacf() estimate
 
+
 set.seed(1234)
 x1 <- arima.sim(n=100, model=list(ar=0.5))
 x2 <- arima.sim(n=100, model=list(ar=0.1))
@@ -128,4 +138,9 @@ acf(x, type ="partial", penalized = FALSE) # usual stats::pacf() estimate
 \references{
 Gallagher, C., Killick, R., Tan, X. (2024+) Penalized M-estimation 
 for Autocorrelation. \emph{Submitted.}
+
+For \code{estimate="bandtap"} use:
+McMurry, T.L. and Politis, D.N. (2010), Banded and tapered estimates for autocovariance 
+matrices and the linear process bootstrap. \emph{Journal of Time Series Analysis}, 
+31: 471-482.
 }

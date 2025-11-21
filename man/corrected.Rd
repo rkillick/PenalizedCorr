@@ -11,6 +11,8 @@ corrected(
   na.action = na.fail,
   demean = TRUE,
   lh = NULL,
+  lambda = NULL,
+  target = NULL,
   ...
 )
 }
@@ -27,6 +29,10 @@ corrected(
 
 \item{lh}{vector of length 1 (value used for all lags), or length lag.max. Default uses formula in the description.}
 
+\item{lambda}{controls the degree of shrinkage towards the target.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
+
+\item{target}{the unbiased (partial) autocorrelation function from a (model) assumption.  Could be a single value (repeated for all 1:lag.max), a single vector of length lag.max (repeated for all nser), or a lag.max x nser matrix. Default is data driven choice.}
+
 \item{...}{additional arguments passed to plotting.}
 }
 \value{
@@ -38,7 +44,9 @@ An object of type acf with the following elements:
 \item{\code{lag}}{A max.lag x nseries x nseries array containing the lags at which the acf/pacf is estimated.}
 \item{\code{series}}{The name of the time series.}
 \item{\code{snames}}{The series names for a multivariate time series.}
-\item{\code{penalized}}{Logical indicating if the acf/pacf returned is penalized.}
+\item{\code{lh}}{Matrix \code{lag.max} x \code{nseries} of the lh used in the estimate when \code{penalized==TRUE}.}
+\item{\code{lambda}}{Matrix \code{lag.max} x \code{nseries} of the lambda used in the estimate when \code{penalized==TRUE}.}
+\item{\code{target}}{Matrix \code{lag.max} x \code{nseries} of the target used in the estimate when \code{penalized==TRUE}.}
 }
 }
 \description{

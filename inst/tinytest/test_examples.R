@@ -120,3 +120,4 @@ x <- cbind(x1, x2, x3)
 expect_equal_to_reference(pacf(x),'./expected/exmvmapacffuncdata.Rdata')
 # stats::pacf
 expect_equal_to_reference(pacf(x, penalized = FALSE),'./expected/exmvmastatspacffuncdata.Rdata')
+
