@@ -44,7 +44,9 @@ An object of type acf with the following elements:
 \item{\code{lag}}{A max.lag x nseries x nseries array containing the lags at which the acf/pacf is estimated.}
 \item{\code{series}}{The name of the time series.}
 \item{\code{snames}}{The series names for a multivariate time series.}
-\item{\code{penalized}}{Logical indicating if the acf/pacf returned is penalized.}
+\item{\code{lh}}{Matrix \code{lag.max} x \code{nseries} of the lh used in the estimate when \code{penalized==TRUE}.}
+\item{\code{lambda}}{Matrix \code{lag.max} x \code{nseries} of the lambda used in the estimate when \code{penalized==TRUE}.}
+\item{\code{target}}{Matrix \code{lag.max} x \code{nseries} of the target used in the estimate when \code{penalized==TRUE}.}
 }
 }
 \description{

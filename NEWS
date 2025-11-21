@@ -1,7 +1,7 @@
 Version 1.1
 ===========
 * Updated with GSOC contributions, thanks (and authorship) go to Andrea Storey.
-* Added unit tests.
+* Added unit testing with the tinytest package
 * Added functionality to calculate the banded and tapered estimate from McMurry and Politis (2010)
 * Moved the target and lambda values (crucial in estimation) to the argument list with the previous values as defaults. This gives the user more control if wanted.
 * Updated documentation.

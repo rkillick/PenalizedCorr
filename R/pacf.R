@@ -41,6 +41,9 @@
 #' \item{\code{lag}}{A \code{lag.max} x \code{nseries} x \code{nseries} array containing the lags at which the acf/pacf is estimated.}
 #' \item{\code{series}}{The name of the time series, \code{x}.}
 #' \item{\code{snames}}{The series names for a multivariate time series.}
+#' \item{\code{lh}}{Matrix \code{lag.max} x \code{nseries} of the lh used in the estimate when \code{penalized==TRUE}.}
+#' \item{\code{lambda}}{Matrix \code{lag.max} x \code{nseries} of the lambda used in the estimate when \code{penalized==TRUE}.}
+#' \item{\code{target}}{Matrix \code{lag.max} x \code{nseries} of the target used in the estimate when \code{penalized==TRUE}.}
 #' \item{\code{penalized}}{Logical returning the \code{penalized} argument.}
 #' \item{\code{estimate}}{Character vector returning the \code{estimate} argument.}
 #' }
@@ -108,7 +111,7 @@ pacf <-
       plot(pacf,...)
     }
     else if(pacf$penalized==TRUE){
-      plot(pacf,myylab,...)
+      plot(pacf,ylab=myylab,...)
     }
     else{
       plot(pacf,...)

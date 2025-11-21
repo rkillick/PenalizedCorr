@@ -29,5 +29,8 @@ nnd=function(acf,sampleT,lag.max,arord=Inf,b=NULL){
     }
     return(acf[,i])
   }) # lag.max x nser
+  if(lag.max==1){acfstar=matrix(acfstar,nrow=1)}
+  else if(nser==1){acfstar=matrix(acfstar,ncol=1)}
+  
   return(acfstar)  
 }
