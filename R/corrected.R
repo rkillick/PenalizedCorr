@@ -60,6 +60,7 @@ corrected = function(x, lag.max = NULL, type = c("correlation", "covariance",
     # set the flag and proceed as if you wanted to calculate correlation
   }
 
+  if(is.null(lag.max)){lag.max <- floor(10 * (log10(sampleT) - log10(nser)))}
   h=1:lag.max
   
   # if pacf then the next line does pacf anyway

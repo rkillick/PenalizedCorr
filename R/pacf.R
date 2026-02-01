@@ -100,10 +100,6 @@ pacf <-
     pacf$penalized=FALSE
   }
   else{ # penalised output
-    sampleT <- as.integer(nrow(x))
-    nser <- as.integer(ncol(x))
-    if(is.null(lag.max)){lag.max <- floor(10 * (log10(sampleT) - log10(nser)))}
-    
     pacf=corrected(x,lag.max,type="partial",na.action,demean,lh,lambda,target,...)
     pacf$penalized=TRUE
     myylab = "Penalized PACF"
