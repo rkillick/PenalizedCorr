@@ -129,6 +129,7 @@ acf <-
     
     sampleT <- as.integer(nrow(x))
     nser <- as.integer(ncol(x))
+    if(is.null(lag.max)){lag.max <- floor(10 * (log10(sampleT) - log10(nser)))}
     
     if (type == "partial") {
       m <- match.call()
