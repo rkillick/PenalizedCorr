@@ -87,9 +87,13 @@ ar.penyw=function(x, aic = TRUE, order.max = NULL, lh=NULL,na.action = na.fail,
       return(el)
     }) # lh is a matrix order.max x nser
   }
-  else{ # not something we expect so stop
+  else if(is.null(dim(lh))){stop("lh must either be NULL, length 1, length order.max, ncol(x), or a matrix with dimension order.max x nser.")}
+  else if(any(dim(lh)!=c(order.max,nser))){ # not something we expect so stop
     stop("lh must either be NULL, length 1, length order.max, ncol(x), or a matrix with dimension order.max x nser.")
   }
+  if(order.max==1){lh=matrix(lh,nrow=1)}
+  else if(nser==1){lh=matrix(lh,ncol=1)}
+  
   
   if(!aic){
     pencoef=lapply(1:nser, FUN = function(i) {
